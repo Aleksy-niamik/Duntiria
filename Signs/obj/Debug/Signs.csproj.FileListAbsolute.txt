@@ -7,3 +7,13 @@ C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.csproj.GenerateResour
 C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.csproj.CoreCompileInputs.cache
 C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.exe
 C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.pdb
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\bin\Debug\Signs.exe.config
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\bin\Debug\Signs.exe
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\bin\Debug\Signs.pdb
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.csprojAssemblyReference.cache
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.Properties.Resources.resources
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.csproj.GenerateResource.cache
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.csproj.CoreCompileInputs.cache
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.exe
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.pdb
+C:\Users\Aleksy\Source\Repos\Duntiria\Signs\obj\Debug\Signs.Form1.resources

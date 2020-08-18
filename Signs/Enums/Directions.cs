@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Signs.Enums
 {
-    enum Directions
+    public enum Directions
     {
         Up,
         Down,
