@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Signs.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Signs.Models
 {
     class Sign
     {
+        public List<Directions> Circles { get; set; }
     }
 }
