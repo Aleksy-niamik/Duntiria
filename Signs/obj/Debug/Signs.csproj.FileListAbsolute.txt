@@ -1,0 +1,9 @@
+C:\D\Microsoft VS Workspace\Duntiria\Signs\bin\Debug\Signs.exe.config
+C:\D\Microsoft VS Workspace\Duntiria\Signs\bin\Debug\Signs.exe
+C:\D\Microsoft VS Workspace\Duntiria\Signs\bin\Debug\Signs.pdb
+C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.csprojAssemblyReference.cache
+C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.Properties.Resources.resources
+C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.csproj.GenerateResource.cache
+C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.csproj.CoreCompileInputs.cache
+C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.exe
+C:\D\Microsoft VS Workspace\Duntiria\Signs\obj\Debug\Signs.pdb
