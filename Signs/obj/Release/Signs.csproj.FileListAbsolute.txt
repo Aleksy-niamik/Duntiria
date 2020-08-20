@@ -1,0 +1,9 @@
+C:\Users\Aleksy\source\repos\Duntiria\Signs\bin\Release\Signs.exe.config
+C:\Users\Aleksy\source\repos\Duntiria\Signs\bin\Release\Signs.exe
+C:\Users\Aleksy\source\repos\Duntiria\Signs\bin\Release\Signs.pdb
+C:\Users\Aleksy\source\repos\Duntiria\Signs\obj\Release\Signs.Form1.resources
+C:\Users\Aleksy\source\repos\Duntiria\Signs\obj\Release\Signs.Properties.Resources.resources
+C:\Users\Aleksy\source\repos\Duntiria\Signs\obj\Release\Signs.csproj.GenerateResource.cache
+C:\Users\Aleksy\source\repos\Duntiria\Signs\obj\Release\Signs.csproj.CoreCompileInputs.cache
+C:\Users\Aleksy\source\repos\Duntiria\Signs\obj\Release\Signs.exe
+C:\Users\Aleksy\source\repos\Duntiria\Signs\obj\Release\Signs.pdb

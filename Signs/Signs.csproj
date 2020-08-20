@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Controllers\SignController.cs" />
     <Compile Include="Enums\Directions.cs" />
+    <Compile Include="Enums\Statuses.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

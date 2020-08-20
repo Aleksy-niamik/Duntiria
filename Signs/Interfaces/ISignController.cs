@@ -11,5 +11,7 @@ namespace Signs.Interfaces
     public interface ISignController
     {
         Image SignToImage(Sign sign, int radius);
+
+        Image SignToSquare(Sign sign, int side);
     }
 }

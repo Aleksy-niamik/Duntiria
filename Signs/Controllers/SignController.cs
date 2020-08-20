@@ -23,7 +23,7 @@ namespace Signs.Controllers
             var bitmap = new Bitmap(maxSide, maxSide);
 
             var g = Graphics.FromImage(bitmap);
-            g.Clear(Color.LightBlue);
+            //g.Clear(Color.LightBlue);
 
             int x = maxSide / 2;
             int y = maxSide / 2;
@@ -59,6 +59,7 @@ namespace Signs.Controllers
                 g.DrawEllipse(new Pen(Color.BlueViolet, 2), new Rectangle(x - radius, y - radius, 2*radius, 2*radius));
                 if (i == sign.Circles.Count - 1)
                 {
+                    g.FillEllipse(new SolidBrush(Color.BlueViolet), new Rectangle(x - radius, y - radius, 2 * radius, 2 * radius));
                     x = (prevX + x) / 2;
                     y = (prevY + y) / 2;
                 }
@@ -66,8 +67,38 @@ namespace Signs.Controllers
                     new Rectangle(Math.Min(x, prevX), Math.Min(y, prevY), 
                         Math.Abs(prevX-x)+2, Math.Abs(prevY-y)+2));
             }
+            g.Dispose();
 
-            return bitmap;
+            var bitmap2 = bitmap.Clone(new Rectangle(
+                sign.X * 2 * radius - radius - sign.X + maxSide/2,
+                sign.Y * 2 * radius - radius - sign.Y + maxSide / 2,
+                sign.Width * 2 * radius - sign.Width + 2,
+                sign.Height * 2 * radius - sign.Height + 2), bitmap.PixelFormat);
+
+            return bitmap2;
+        }
+
+        public Image SignToSquare(Sign sign, int side)
+        {
+            var bigger = Math.Max(sign.Width, sign.Height);
+            var radius = (side - 2 + bigger) / (2 * bigger);
+            var img = SignToImage(sign, radius);
+            var biggerSide = Math.Max(img.Width, img.Height);
+
+            var img2 = new Bitmap(biggerSide, biggerSide);
+            var g = Graphics.FromImage(img2);
+            //g.Clear(Color.Blue);
+            if(img.Width >= img.Height)
+            {
+                g.DrawImage(img, new Point(0, (biggerSide - img.Height) / 2));
+            }
+            else
+            {
+                g.DrawImage(img, new Point((biggerSide - img.Width) / 2, 0));
+            }
+            g.Dispose();
+
+            return img2;
         }
     }
 }
