@@ -40,7 +40,7 @@
             // 
             // signBox
             // 
-            this.signBox.Location = new System.Drawing.Point(13, 13);
+            this.signBox.Location = new System.Drawing.Point(587, 253);
             this.signBox.Name = "signBox";
             this.signBox.Size = new System.Drawing.Size(100, 50);
             this.signBox.TabIndex = 0;

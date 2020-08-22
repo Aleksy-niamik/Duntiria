@@ -2,6 +2,7 @@
 using Signs.Enums;
 using Signs.Interfaces;
 using Signs.Models;
+using Signs.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,8 @@ namespace Signs
         private ISignRepository SignRepository;
         private Sign Sign;
         private SignController SignController;
+        private SignRow SignRow;
+        private int idx = 0;
         public Form1(ISignRepository signRepository)
         {
             InitializeComponent();
@@ -32,6 +35,7 @@ namespace Signs
             Sign.Circles.AddRange(new Directions[] { Directions.Up, Directions.Up, Directions.Left, Directions.Left, Directions.Left, Directions.Down, Directions.Down });
             SignRepository.Add(Sign);
             SignController = new SignController();
+            SignRow = new SignRow(Sign, 0, new Point(0,0));
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -70,7 +74,7 @@ namespace Signs
             }
             else
             {
-                signBox.Image = SignController.SignToSquare(Sign, 500);
+                signBox.Image = SignController.SignToSquare(Sign, 100);
             }
             signBox.Size = signBox.Image.Size;
             label1.Text = Sign.IsValid ? Sign.Value.ToString() : Sign.Status.ToString() + "(" + Sign.FloatValue + ")";
@@ -78,31 +82,9 @@ namespace Signs
 
         private void button2_Click(object sender, EventArgs e)
         {
-            do
-            {
-                Directions[] directions = new Directions[(int) numericUpDown1.Value-1];
-            var random = new Random();
-            do
-            {
-                for (int i = 0; i < numericUpDown1.Value - 1; i++)
-                {
-                    directions[i] = (Directions)random.Next(0, 4);
-                }
-                Sign.Circles = directions.ToList();
-            } while (!Sign.IsValid);
-           
-
-            if(checkBox1.Checked)
-            {
-                signBox.Image = SignController.SignToImage(Sign, 50);
-            }
-            else
-            {
-                signBox.Image = SignController.SignToSquare(Sign, 300);
-            }
-            signBox.Size = signBox.Image.Size;
-            label1.Text = Sign.IsValid ? Sign.Value.ToString() : Sign.Status.ToString() + "(" + Sign.FloatValue + ")";
-            } while (label1.Text != "0");
+            SignRow = new SignRow(Sign, idx, new Point( 5, 60*idx + 5));
+            idx++;
+            SignRow.AddToForm(this);
         }
     }
 }

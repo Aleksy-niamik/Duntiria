@@ -23,7 +23,7 @@ namespace Signs.Controllers
             var bitmap = new Bitmap(maxSide, maxSide);
 
             var g = Graphics.FromImage(bitmap);
-            //g.Clear(Color.LightBlue);
+           // g.Clear(Color.Transparent);
 
             int x = maxSide / 2;
             int y = maxSide / 2;
