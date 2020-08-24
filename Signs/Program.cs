@@ -18,8 +18,9 @@ namespace Signs
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var signRepository = new SignRepository(); 
-            Application.Run(new Form1(signRepository));
+            var symbolRepository = new SymbolRepository();
+            var signRepository = new SignRepository();
+            Application.Run(new Form1(symbolRepository, signRepository));
         }
     }
 }

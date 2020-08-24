@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Signs.Controllers
 {
-    public class SignController : ISignController
+    public class SymbolController : ISymbolController
     {
         /*dwa główne warianty:
             -metoda rysująca w określonej ramce
             -metoda rysująca jak wyjdzie, z podaniem promienia kółka
         */
-        public Image SignToImage(Sign sign, int radius)
+        public Image SymbolToImage(Symbol symbol, int radius)
         {
             var dist = radius * 2 - 1;
-            var maxSide = sign.Length * dist * 2;
+            var maxSide = symbol.Length * dist * 2;
             var bitmap = new Bitmap(maxSide, maxSide);
 
             var g = Graphics.FromImage(bitmap);
@@ -32,11 +32,11 @@ namespace Signs.Controllers
             g.DrawEllipse(new Pen(Color.BlueViolet, 2), new Rectangle(x - radius, y - radius, 2 * radius, 2 * radius));
             g.DrawEllipse(new Pen(Color.BlueViolet, 2), new Rectangle(x - radius / 3, y - radius/3, 2 * radius / 3, 2 * radius / 3));
 
-            for (int i=0; i<sign.Circles.Count; i++)
+            for (int i=0; i<symbol.Circles.Count; i++)
             {
                 prevX = x;
                 prevY = y;
-                switch (sign.Circles[i])
+                switch (symbol.Circles[i])
                 {
                     case Directions.Right:
                         x += dist;
@@ -57,7 +57,7 @@ namespace Signs.Controllers
                     prevY = (prevY * 5 + y) / 6;
                 }
                 g.DrawEllipse(new Pen(Color.BlueViolet, 2), new Rectangle(x - radius, y - radius, 2*radius, 2*radius));
-                if (i == sign.Circles.Count - 1)
+                if (i == symbol.Circles.Count - 1)
                 {
                     g.FillEllipse(new SolidBrush(Color.BlueViolet), new Rectangle(x - radius, y - radius, 2 * radius, 2 * radius));
                     x = (prevX + x) / 2;
@@ -70,19 +70,19 @@ namespace Signs.Controllers
             g.Dispose();
 
             var bitmap2 = bitmap.Clone(new Rectangle(
-                sign.X * 2 * radius - radius - sign.X + maxSide/2,
-                sign.Y * 2 * radius - radius - sign.Y + maxSide / 2,
-                sign.Width * 2 * radius - sign.Width + 2,
-                sign.Height * 2 * radius - sign.Height + 2), bitmap.PixelFormat);
+                symbol.X * 2 * radius - radius - symbol.X + maxSide/2,
+                symbol.Y * 2 * radius - radius - symbol.Y + maxSide / 2,
+                symbol.Width * 2 * radius - symbol.Width + 2,
+                symbol.Height * 2 * radius - symbol.Height + 2), bitmap.PixelFormat);
 
             return bitmap2;
         }
 
-        public Image SignToSquare(Sign sign, int side)
+        public Image SymbolToSquare(Symbol symbol, int side)
         {
-            var bigger = Math.Max(sign.Width, sign.Height);
+            var bigger = Math.Max(symbol.Width, symbol.Height);
             var radius = (side - 2 + bigger) / (2 * bigger);
-            var img = SignToImage(sign, radius);
+            var img = SymbolToImage(symbol, radius);
             var biggerSide = Math.Max(img.Width, img.Height);
 
             var img2 = new Bitmap(biggerSide, biggerSide);

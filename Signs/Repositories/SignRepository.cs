@@ -1,4 +1,5 @@
-﻿using Signs.Interfaces;
+﻿using Signs.Enums;
+using Signs.Interfaces;
 using Signs.Models;
 using System;
 using System.Collections.Generic;
@@ -11,23 +12,28 @@ namespace Signs.Repositories
     public class SignRepository : ISignRepository
     {
         private List<Sign> list;
-
         public SignRepository()
         {
             list = new List<Sign>();
         }
         public void Add(Sign sign)
         {
-            if(sign.IsValid)
+            if (list.Any(ssign => ssign.Value == sign.Value)) throw new Exception("You cannot have two sings with same numbers in same repo");
+            list.Add(sign);
+        }
+
+        public void AddRange(IEnumerable<Sign> signs)
+        {
+            foreach (Sign sign in signs)
             {
-                sign.Id = getFreeId();
+                if (list.Any(ssign => ssign.Value == sign.Value)) throw new Exception("You cannot have two sings with same numbers in same repo");
                 list.Add(sign);
             }
         }
 
         public void Delete(Sign sign)
         {
-            throw new NotImplementedException();
+            list.Remove(sign);
         }
 
         public void Edit(Sign sign)
@@ -40,14 +46,9 @@ namespace Signs.Repositories
             return list;
         }
 
-        public IEnumerable<Sign> GetByAlef(int alef)
+        public IEnumerable<Sign> GetByFamily(SignFamilies family)
         {
-            return list.Where(sign => sign.Alef == alef);
-        }
-
-        public Sign? GetById(int id)
-        {
-            return list.FirstOrDefault(sign => sign.Id == id);
+            return list.Where(sign => sign.Family == family);
         }
 
         public IEnumerable<Sign> GetByLength(int length)
@@ -55,16 +56,14 @@ namespace Signs.Repositories
             return list.Where(sign => sign.Length == length);
         }
 
+        public IEnumerable<Sign> GetByNumber(SignNumbers number)
+        {
+            return list.Where(sign => sign.Number == number);
+        }
+
         public IEnumerable<Sign> GetByValue(int value)
         {
             return list.Where(sign => sign.Value == value);
-        }
-
-        private int getFreeId()
-        {
-            int i = 0;
-            while (list.Select(sign => sign.Id).Contains(i++)) ;
-            return i;
         }
     }
 }

@@ -52,7 +52,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\SignController.cs" />
+    <Compile Include="Controllers\SymbolController.cs" />
+    <Compile Include="Controllers\SymbolsGenerator.cs" />
     <Compile Include="Enums\Directions.cs" />
     <Compile Include="Enums\FemaleNumerals.cs" />
     <Compile Include="Enums\MaleNumerals.cs" />
@@ -65,12 +66,17 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\ISignController.cs" />
     <Compile Include="Interfaces\ISignRepository.cs" />
+    <Compile Include="Interfaces\ISymbolController.cs" />
+    <Compile Include="Interfaces\ISymbolRepository.cs" />
+    <Compile Include="Interfaces\ISymbolsGenerator.cs" />
+    <Compile Include="Models\Column.cs" />
     <Compile Include="Models\Sign.cs" />
+    <Compile Include="Models\Symbol.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SignRepository.cs" />
+    <Compile Include="Repositories\SymbolRepository.cs" />
     <Compile Include="Views\SignRow.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

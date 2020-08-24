@@ -1,110 +1,37 @@
 ﻿using Signs.Enums;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Signs.Models
 {
     public class Sign
     {
-        public int Id { get; set; }
+        public List<Symbol> Symbols { get; private set; }
 
-        public List<Directions> Circles { get; set; }
+        public int Value { get; private set; }
 
-        public int Length => Circles.Count + 1;
+        public SignFamilies Family => (SignFamilies)(Value / 12);
 
-        public int Alef { get; set; }
+        public SignNumbers Number => (SignNumbers)(Value % 12);
 
-        public Statuses Status 
-        { 
-            get
-            {
-                if (getPoints().Distinct().Count() != getPoints().Count())
-                {
-                    return Statuses.Loop;
-                }
-                
-                if (FloatValue != Math.Round(FloatValue))
-                {
-                    return Statuses.Noninteger;
-                }
+        public int Length => Symbols.Select(symbol => symbol.Length).Min();
 
-                if (Value >= 144)
-                {
-                    return Statuses.TooBig;
-                }
-
-                if (Value < 0)
-                {
-                    return Statuses.Negative;
-                }
-                return Statuses.Valid;
-            }
-        }
-
-        private List<Point> getPoints()
+        public Sign(int value)
         {
-            var points = new List<Point>();
-            points.Add(new Point(0, 0));
-            foreach (Directions circle in Circles)
-            {
-                switch (circle)
-                {
-                    case Directions.Right:
-                        points.Add(new Point(points.Last().X + 1, points.Last().Y));
-                        break;
-                    case Directions.Left:
-                        points.Add(new Point(points.Last().X - 1, points.Last().Y));
-                        break;
-                    case Directions.Up:
-                        points.Add(new Point(points.Last().X, points.Last().Y - 1));
-                        break;
-                    case Directions.Down:
-                        points.Add(new Point(points.Last().X, points.Last().Y + 1));
-                        break;
-                }
-            }
-            return points;
+            if (value < 0 || value >= 144) throw new Exception("value must be between 0 and 143");
+            Value = value;
+            Symbols = new List<Symbol>();
         }
 
-        public int Height => getPoints().OrderByDescending(point => point.Y).First().Y - getPoints().OrderBy(point => point.Y).First().Y + 1;
-
-        public int Width => getPoints().OrderByDescending(point => point.X).First().X - getPoints().OrderBy(point => point.X).First().X + 1;
-
-        public int X => getPoints().OrderBy(point => point.X).First().X;
-
-        public int Y => getPoints().OrderBy(point => point.Y).First().Y;
-
-        public Sign(int alef)
+        public void Add(Symbol symbol)
         {
-            Circles = new List<Directions>();
-            Alef = alef;
+            if (!symbol.IsValid) throw new Exception("symbol must be valid");
+            if (symbol.Value != Value) throw new Exception("symbol must have the same value as sign");
+            Symbols.Add(symbol);
         }
-
-        public double FloatValue
-        {
-            get
-            {
-                double val = Alef;
-                foreach (Directions circle in Circles)
-                {
-                    val = circle switch
-                    {
-                        Directions.Up => val * 3,
-                        Directions.Down => val / 3,
-                        Directions.Right => val + 3,
-                        Directions.Left => val - 3
-                    };
-                }
-                return Math.Round(val * 10000) / 10000;
-            }
-            set { }
-        }
-        public int Value => (int) Math.Round(FloatValue);
-
-        public bool IsValid => Status == Statuses.Valid;
     }
 }

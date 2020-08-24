@@ -18,21 +18,21 @@ namespace Signs.Views
         private Label number;
         private Label description;
         private Label showMore;
-        private ISignController controller;
+        private ISymbolController controller;
+        private Form1 Form;
 
         public int Id { get; set; }
 
         public Sign Sign { get; set; }
 
-        public Point Point { get; set; }
-
         public int Value { get; set;}
 
-        public SignRow(Sign sign, int id, Point point)
+        public SignRow(Sign sign, int id, Form1 form)
         {
-            controller = new SignController();
+            Id = id;
+            Form = form;
+            controller = new SymbolController();
             Sign = sign;
-            Point = point;
             signBoxes = new List<PictureBox>();
             number = new Label();
             description = new Label();
@@ -40,47 +40,59 @@ namespace Signs.Views
 
             this.description.AutoSize = true;
             this.description.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.description.Location = new System.Drawing.Point(Point.X + 60, Point.Y);
+            this.description.Location = new System.Drawing.Point(60, 4);
             this.description.Name = "number" + Id.ToString();
             this.description.TabIndex = 1;
-            this.description.Text = " znak " + ((MaleNumerals)(sign.Value % 12)).ToString() + 
-                " (" + ((SignNumbers)(sign.Value % 12)).ToString() + ")\r\n" +
-                " rodziny " + ((FemaleNumerals)(sign.Value / 12)).ToString() + 
-                " (" + ((SignFamilies)(sign.Value / 12)).ToString() + ")";
+            this.description.Text = " znak " + ((MaleNumerals)sign.Number).ToString() + 
+                " (" + sign.Number.ToString() + ")\r\n" +
+                " rodziny " + ((FemaleNumerals)sign.Family).ToString() + 
+                " (" + sign.Family.ToString() + ")";
 
             this.number.AutoSize = true;
             this.number.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.number.Location = Point;
+            this.number.Location = new Point(0,4);
             this.number.Name = "number" + Id.ToString();
             this.number.TabIndex = 1;
             this.number.Text = sign.Value.ToString();
 
-            var signBox = new PictureBox();
-            signBox.Location = new System.Drawing.Point(Point.X + 260, Point.Y - 4);
-            signBox.Name = "signBox" + Id.ToString();
-            signBox.TabIndex = 0;
-            signBox.TabStop = false;
-            signBox.Image = controller.SignToSquare(sign, 50);
-            signBox.Size = signBox.Image.Size;
+            this.showMore.AutoSize = true;
+            this.showMore.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.showMore.Location = new Point(980, 4);
+            this.showMore.Name = "showMore" + Id.ToString();
+            this.showMore.TabIndex = 1;
+            this.showMore.Text = "Ogółem " + sign.Symbols.Count.ToString() + " symboli\r\nNajkrótszy ma długość " + 
+                sign.Symbols.First().Length + " kółek";
 
-            signBoxes.Add(signBox);
+            for (int i=0; i<Math.Min(sign.Symbols.Count, 12); i++)
+            {
+                var signBox = new PictureBox();
+                signBox.Location = new System.Drawing.Point(260 + i*60, 0);
+                signBox.Name = "signBox" + sign.Symbols[i].Id.ToString();
+                signBox.TabIndex = 0;
+                signBox.TabStop = false;
+                signBox.Image = controller.SymbolToSquare(sign.Symbols[i], 50);
+                signBox.Size = signBox.Image.Size;
+                signBox.Click += new System.EventHandler(Form.signBox_Clicked);
+                signBoxes.Add(signBox);
+            }            
         }
 
-        public void AddToForm(Form form)
+        public void AddToForm(Control control, Point point)
         {
-            if (!form.Controls.Contains(number))
+            List<Control> controls = new List<Control>();
+            controls.AddRange(signBoxes);
+            controls.Add(description);
+            controls.Add(showMore);
+            controls.Add(number);
+
+            if (!control.Controls.Contains(number))
             {
-                form.Controls.Add(number);
+                controls.ForEach(control => control.Location = new Point(control.Location.X + point.X, control.Location.Y + point.Y));
+                control.Controls.Add(number);
+                control.Controls.Add(description);
+                control.Controls.Add(showMore);
+                signBoxes.ForEach(signBox => control.Controls.Add(signBox));
             }
-            if (!form.Controls.Contains(description))
-            {
-                form.Controls.Add(description);
-            }
-            signBoxes.ForEach(signBox =>
-            {
-                if (!form.Controls.Contains(signBox))
-                    form.Controls.Add(signBox);
-            });
             
 
         }

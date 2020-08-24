@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Signs.Interfaces
 {
-    public interface ISignController
+    public interface ISymbolController
     {
-        Image SignToImage(Sign sign, int radius);
+        Image SymbolToImage(Symbol symbol, int radius);
 
-        Image SignToSquare(Sign sign, int side);
+        Image SymbolToSquare(Symbol symbol, int side);
     }
 }

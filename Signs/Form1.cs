@@ -17,74 +17,121 @@ namespace Signs
 {
     public partial class Form1 : Form
     {
+        private ISymbolRepository SymbolRepository;
         private ISignRepository SignRepository;
-        private Sign Sign;
-        private SignController SignController;
-        private SignRow SignRow;
-        private int idx = 0;
-        public Form1(ISignRepository signRepository)
+        private ISymbolsGenerator SymbolsGenerator;
+        private Column[] Columns;
+        private State state;
+        public Form1(ISymbolRepository symbolRepository, ISignRepository signRepository)
         {
             InitializeComponent();
+            SymbolRepository = symbolRepository;
             SignRepository = signRepository;
             Init();
         }
 
         private void Init()
         {
-            Sign = new Sign(48);
-            Sign.Circles.AddRange(new Directions[] { Directions.Up, Directions.Up, Directions.Left, Directions.Left, Directions.Left, Directions.Down, Directions.Down });
-            SignRepository.Add(Sign);
-            SignController = new SignController();
-            SignRow = new SignRow(Sign, 0, new Point(0,0));
+            state = new State(this);
+
+            SymbolsGenerator = new SymbolsGenerator();
+            SymbolRepository.AddRange(SymbolsGenerator.Generate(11, 48));
+            //TODO: variable alef from user
+            SignRepository.AddRange(SymbolRepository.ToSigns());
+
+            Columns = new Column[12];
+            for (int i = 0; i < Columns.Length; i++)
+                Columns[i] = new Column(i, this);
+
+            Render();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void MatchTabsNames()
         {
-            Directions[] directions = new Directions[(int) numericUpDown1.Value-1];
-            var random = new Random();
-            do
+            for (int i = 0; i < tabControl1.TabPages.Count; i++)
             {
-                for (int i = 0; i < numericUpDown1.Value - 1; i++)
+                if (radioButton1.Checked)
+                    tabControl1.TabPages[i].Text = ((SignFamilies)i).ToString();
+                else if (radioButton2.Checked)
+                    tabControl1.TabPages[i].Text = ((SignNumbers)i).ToString();
+                else if (radioButton3.Checked)
+                    tabControl1.TabPages[i].Text = i.ToString();
+            }
+        }
+
+        private void Render()
+        {
+            MatchTabsNames();
+
+            for (int i = 0; i < Columns.Length; i++)
+            {
+                tabControl1.TabPages[i].Controls.Clear();
+                if (radioButton1.Checked)
+                    Columns[i].MakeRowsFromSigns(SignRepository.GetByFamily((SignFamilies)i));
+                else if (radioButton2.Checked)
+                    Columns[i].MakeRowsFromSigns(SignRepository.GetByNumber((SignNumbers)i));
+                else if (radioButton3.Checked)
+                    Columns[i].MakeRowsFromSigns(SignRepository.GetByLength(i));
+
+                if (radioButton4.Checked)
+                    Columns[i].Rows.Sort((row1, row2) => (row1.Sign.Value - row2.Sign.Value == 0) ?
+                        row1.Sign.Length - row2.Sign.Length : row1.Sign.Value - row2.Sign.Value);
+                else if (radioButton5.Checked)
+                    Columns[i].Rows.Sort((row1, row2) => (row1.Sign.Length - row2.Sign.Length == 0) ?
+                        row1.Sign.Value - row2.Sign.Value : row1.Sign.Length - row2.Sign.Length);
+                Columns[i].AddToControl(tabControl1.TabPages[i]);
+            }
+        }
+
+        private void radioButton_Clicked(object sender, EventArgs e)
+        {
+            if (!state.CheckChangeAndUpdateState(this)) return;
+            Render();
+        }
+
+        public void signBox_Clicked(object sender, EventArgs e)
+        {
+            if (sender is PictureBox pictureBox)
+            {
+                var symbol = SymbolRepository.GetById(int.Parse(pictureBox.Name.Substring(7)));
+                var symbolController = new SymbolController();
+                pictureBox1.Image = symbolController.SymbolToSquare(symbol, pictureBox1.Size.Width);
+            }
+        }
+
+        private class State
+        {
+            public bool[] Radios { get; set; }
+
+            public State(Form1 form)
+            {
+                Radios = new bool[5];
+                Radios[0] = form.radioButton1.Checked;
+                Radios[1] = form.radioButton2.Checked;
+                Radios[2] = form.radioButton3.Checked;
+                Radios[3] = form.radioButton4.Checked;
+                Radios[4] = form.radioButton5.Checked;
+            }
+
+            public bool CheckChangeAndUpdateState(Form1 form)
+            {
+                if (Radios[0] != form.radioButton1.Checked ||
+                    Radios[1] != form.radioButton2.Checked ||
+                    Radios[2] != form.radioButton3.Checked ||
+                    Radios[3] != form.radioButton4.Checked ||
+                    Radios[4] != form.radioButton5.Checked)
                 {
-                    directions[i] = random.Next(0, 6) switch
-                    {
-                        0 => Directions.Left,
-                        1 => Directions.Left,
-                        2 => Directions.Right,
-                        3 => Directions.Right,
-                        4 => Directions.Up,
-                        5 => Directions.Down
-                    };
-                    if(i > 0)
-                    {
-                        if (directions[i - 1] == Directions.Left && directions[i] == Directions.Right ||
-                         directions[i - 1] == Directions.Right && directions[i] == Directions.Left ||
-                         directions[i - 1] == Directions.Up && directions[i] == Directions.Down ||
-                         directions[i - 1] == Directions.Down && directions[i] == Directions.Up)
-                            i--;
-                    }
+                    Radios[0] = form.radioButton1.Checked;
+                    Radios[1] = form.radioButton2.Checked;
+                    Radios[2] = form.radioButton3.Checked;
+                    Radios[3] = form.radioButton4.Checked;
+                    Radios[4] = form.radioButton5.Checked;
+
+                    return true;
                 }
-                Sign.Circles = directions.ToList();
-            } while (!Sign.IsValid);
-           
-
-            if(checkBox1.Checked)
-            {
-                signBox.Image = SignController.SignToImage(Sign, 50);
+                else return false;
             }
-            else
-            {
-                signBox.Image = SignController.SignToSquare(Sign, 100);
-            }
-            signBox.Size = signBox.Image.Size;
-            label1.Text = Sign.IsValid ? Sign.Value.ToString() : Sign.Status.ToString() + "(" + Sign.FloatValue + ")";
-        }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            SignRow = new SignRow(Sign, idx, new Point( 5, 60*idx + 5));
-            idx++;
-            SignRow.AddToForm(this);
         }
     }
 }

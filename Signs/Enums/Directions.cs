@@ -8,9 +8,9 @@ namespace Signs.Enums
 {
     public enum Directions
     {
-        Up,
-        Down,
+        Up, 
         Left,
+        Down,
         Right
     }
 }

@@ -1,4 +1,5 @@
-﻿using Signs.Models;
+﻿using Signs.Enums;
+using Signs.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,17 @@ namespace Signs.Interfaces
     {
         IEnumerable<Sign> GetAll();
 
-        Sign GetById(int id);
+        IEnumerable<Sign> GetByValue(int value);
 
-        IEnumerable<Sign> GetByAlef(int alef);
+        IEnumerable<Sign> GetByFamily(SignFamilies family);
+
+        IEnumerable<Sign> GetByNumber(SignNumbers number);
 
         IEnumerable<Sign> GetByLength(int length);
 
-        IEnumerable<Sign> GetByValue(int value);
-
         void Add(Sign sign);
+
+        void AddRange(IEnumerable<Sign> signs);
 
         void Edit(Sign sign);
 
