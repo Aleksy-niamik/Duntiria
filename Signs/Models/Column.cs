@@ -23,13 +23,13 @@ namespace Signs.Models
             Rows = new List<SignRow>();
         }
 
-        public void MakeRowsFromSigns(IEnumerable<Sign> signs)
+        public void MakeRowsFromSigns(IEnumerable<Sign> signs, int symbolsAmount)
         {
             Rows.Clear();
             int i = 0;
             foreach(Sign sign in signs)
             {
-                Rows.Add(new SignRow(sign, Id * 1000 + i++, Form));
+                Rows.Add(new SignRow(sign, Id * 1000 + i++, Form, symbolsAmount));
             }
         }
 

@@ -27,10 +27,13 @@ namespace Signs.Views
 
         public int Value { get; set;}
 
-        public SignRow(Sign sign, int id, Form1 form)
+        public int SymbolsAmount { get; set; }
+
+        public SignRow(Sign sign, int id, Form1 form, int symbolsAmount)
         {
             Id = id;
             Form = form;
+            SymbolsAmount = symbolsAmount;
             controller = new SymbolController();
             Sign = sign;
             signBoxes = new List<PictureBox>();
@@ -57,13 +60,13 @@ namespace Signs.Views
 
             this.showMore.AutoSize = true;
             this.showMore.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.showMore.Location = new Point(980, 4);
+            this.showMore.Location = new Point(260 + SymbolsAmount * 60, 4);
             this.showMore.Name = "showMore" + Id.ToString();
             this.showMore.TabIndex = 1;
             this.showMore.Text = "Ogółem " + sign.Symbols.Count.ToString() + " symboli\r\nNajkrótszy ma długość " + 
                 sign.Symbols.First().Length + " kółek";
 
-            for (int i=0; i<Math.Min(sign.Symbols.Count, 12); i++)
+            for (int i=0; i<Math.Min(sign.Symbols.Count, SymbolsAmount); i++)
             {
                 var signBox = new PictureBox();
                 signBox.Location = new System.Drawing.Point(260 + i*60, 0);

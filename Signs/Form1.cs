@@ -43,7 +43,8 @@ namespace Signs
             for (int i = 0; i < Columns.Length; i++)
                 Columns[i] = new Column(i, this);
 
-            Render();
+            Resized();
+            Render(state.SymbolsAmount);
         }
 
         private void MatchTabsNames()
@@ -59,7 +60,7 @@ namespace Signs
             }
         }
 
-        private void Render()
+        private void Render(int symbolsAmount)
         {
             MatchTabsNames();
 
@@ -67,11 +68,11 @@ namespace Signs
             {
                 tabControl1.TabPages[i].Controls.Clear();
                 if (radioButton1.Checked)
-                    Columns[i].MakeRowsFromSigns(SignRepository.GetByFamily((SignFamilies)i));
+                    Columns[i].MakeRowsFromSigns(SignRepository.GetByFamily((SignFamilies)i), symbolsAmount);
                 else if (radioButton2.Checked)
-                    Columns[i].MakeRowsFromSigns(SignRepository.GetByNumber((SignNumbers)i));
+                    Columns[i].MakeRowsFromSigns(SignRepository.GetByNumber((SignNumbers)i), symbolsAmount);
                 else if (radioButton3.Checked)
-                    Columns[i].MakeRowsFromSigns(SignRepository.GetByLength(i));
+                    Columns[i].MakeRowsFromSigns(SignRepository.GetByLength(i), symbolsAmount);
 
                 if (radioButton4.Checked)
                     Columns[i].Rows.Sort((row1, row2) => (row1.Sign.Value - row2.Sign.Value == 0) ?
@@ -86,7 +87,7 @@ namespace Signs
         private void radioButton_Clicked(object sender, EventArgs e)
         {
             if (!state.CheckChangeAndUpdateState(this)) return;
-            Render();
+            Render(state.SymbolsAmount);
         }
 
         public void signBox_Clicked(object sender, EventArgs e)
@@ -99,18 +100,42 @@ namespace Signs
             }
         }
 
+        public void WindowResized(object sender, EventArgs e)
+        {
+            Resized();
+        }
+
+        private void Resized()
+        {
+            if (state.CheckChangeAndUpdateState(this))
+                Render(state.SymbolsAmount);
+            tabControl1.Size = new Size(480 + state.SymbolsAmount * 60, this.Size.Height - 100);
+
+            for (int i = 0; i < tabControl1.TabPages.Count; i++)
+            {
+                var panels = tabControl1.TabPages[i].Controls.Find("panel" + i.ToString(), true);
+                if(panels.Any())
+                {
+                    var panel = panels.First();
+                    panel.Size = new Size(tabControl1.Width, this.Height - 120);
+                }
+            }
+
+            groupBox1.Location = new Point(498 + state.SymbolsAmount * 60, groupBox1.Location.Y);
+            groupBox2.Location = new Point(498 + state.SymbolsAmount * 60, groupBox2.Location.Y);
+            pictureBox1.Location = new Point(498 + state.SymbolsAmount * 60, pictureBox1.Location.Y);
+        }
+
         private class State
         {
             public bool[] Radios { get; set; }
 
+            public int SymbolsAmount { get; set; }
+
             public State(Form1 form)
             {
                 Radios = new bool[5];
-                Radios[0] = form.radioButton1.Checked;
-                Radios[1] = form.radioButton2.Checked;
-                Radios[2] = form.radioButton3.Checked;
-                Radios[3] = form.radioButton4.Checked;
-                Radios[4] = form.radioButton5.Checked;
+                Update(form);
             }
 
             public bool CheckChangeAndUpdateState(Form1 form)
@@ -119,17 +144,23 @@ namespace Signs
                     Radios[1] != form.radioButton2.Checked ||
                     Radios[2] != form.radioButton3.Checked ||
                     Radios[3] != form.radioButton4.Checked ||
-                    Radios[4] != form.radioButton5.Checked)
+                    Radios[4] != form.radioButton5.Checked ||
+                    SymbolsAmount != (form.Width - 816) / 60)
                 {
-                    Radios[0] = form.radioButton1.Checked;
-                    Radios[1] = form.radioButton2.Checked;
-                    Radios[2] = form.radioButton3.Checked;
-                    Radios[3] = form.radioButton4.Checked;
-                    Radios[4] = form.radioButton5.Checked;
-
+                    Update(form);
                     return true;
                 }
                 else return false;
+            }
+
+            public void Update(Form1 form)
+            {
+                Radios[0] = form.radioButton1.Checked;
+                Radios[1] = form.radioButton2.Checked;
+                Radios[2] = form.radioButton3.Checked;
+                Radios[3] = form.radioButton4.Checked;
+                Radios[4] = form.radioButton5.Checked;
+                SymbolsAmount = (form.Width - 816) / 60;
             }
 
         }
